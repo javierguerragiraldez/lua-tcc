@@ -11,7 +11,13 @@ typedef struct {
 } tcc_userdata;
 
 static tcc_userdata *check_tcc (lua_State *L, int index) {
-	tcc_userdata *tcc = (tcc_userdata *)luaL_checkudata(L, index, TCCStateType);
+	tcc_userdata *tcc;
+	int top = lua_gettop (L);
+	
+	if (index < 0 && -index <= top)
+		index = top+index+1;
+	
+	tcc = (tcc_userdata *)luaL_checkudata(L, index, TCCStateType);
 	luaL_argcheck(L, tcc, index, "TCC state expected");
 	return tcc;
 }
